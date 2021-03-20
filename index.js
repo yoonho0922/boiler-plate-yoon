@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
 const port = 5000
+
 const bodyPaser = require('body-parser')
 const User = require('./models/User')
+const config = require('./config/key')
 
 
 // application/x-www-form-urlencoded 형식의 데이터를 가져오기위한 설정
@@ -10,12 +12,14 @@ app.use(bodyPaser.urlencoded({extended: true}))
 // application/json
 app.use(bodyPaser.json())
 
+// 데이터베이스 연결
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://yoonho:990922@cluster0.fk6wc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+mongoose.connect(config.mongoURI, {
     useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false
-}).then(() => console.log('MongoDB Connected...'))
+}).then(() => console.log('MongoDB Connected.'))
   .catch(err => console.log(err))
 
+// 라우팅
 app.get('/', (req, res) => {
     res.send('Hello World!')
 });
@@ -33,6 +37,7 @@ app.post('/register', (req, res) => {
     })
 })
 
+// 서버 실행
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
